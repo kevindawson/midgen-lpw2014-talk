@@ -1,0 +1,114 @@
+<html>
+<head>
+<title>Slide 20</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script>
+function navigate(e) {
+    var keynum = (window.event) // IE
+        ? e.keyCode
+        : e.which;
+    if (keynum == 8) {
+        window.location = "020" + ".html";
+        return false;
+    }
+    if (keynum == 13 || keynum == 32) {
+        window.location = "021.sh" + ".html";
+        return false;
+    }
+    if (keynum == 73 || keynum == 105) {
+        window.location = "index.html";
+        return false;
+    }
+    return true;
+}
+</script>
+</head>
+<body onkeydown="return navigate(event)">
+<div style="border-style: solid ; border-width: 2px ; font-size: x-large">
+<pre>                    The ablity to recast phase-requirements
+
+    What the F### you say is that and why do we need it!
+
+        YAML::Tiny                  {
+            corelist   0,
+            count      8,
+            infiles    [
+                [0] [
+                    [0] &quot;/lib/Module/Install/Metadata.pm&quot;,
+                    [1] 0,
+                    [2] &quot;App::Midgen::Role::Eval&quot;,
+                    [3] &quot;RuntimeRecommends&quot;
+                ],
+                [1] [
+                    [0] &quot;/lib/Module/Install/Metadata.pm&quot;,
+                    [1] 0,
+                    [2] &quot;Perl::PrereqScanner&quot;,
+                    [3] &quot;RuntimeRequires&quot;
+                ],
+                [2] [
+                    [0] &quot;/lib/Module/Install/Admin/Metadata.pm&quot;,
+                    [1] 0,
+                    [2] &quot;Perl::PrereqScanner&quot;,
+                    [3] &quot;RuntimeRequires&quot;
+                ],
+                [3] [
+                    [0] &quot;/lib/inc/Module/Install.pm&quot;,
+                    [1] 0,
+                    [2] &quot;App::Midgen::Role::Eval&quot;,
+                    [3] &quot;RuntimeRecommends&quot;
+                ],
+                [4] [
+                    [0] &quot;t/27_build_requires_and_include.t&quot;,
+                    [1] 0,
+                    [2] &quot;Perl::PrereqScanner&quot;,
+                    [3] &quot;TestRequires&quot;
+                ],
+                [5] [
+                    [0] &quot;t/30_build_subdirs.t&quot;,
+                    [1] 0,
+                    [2] &quot;Perl::PrereqScanner&quot;,
+                    [3] &quot;TestRequires&quot;
+                ],
+                [6] [
+                    [0] &quot;t/31_add_metadata.t&quot;,
+                    [1] 0,
+                    [2] &quot;Perl::PrereqScanner&quot;,
+                    [3] &quot;TestRequires&quot;
+                ],
+                [7] [
+                    [0] &quot;t/10_test.t&quot;,
+                    [1] 0,
+                    [2] &quot;Perl::PrereqScanner&quot;,
+                    [3] &quot;TestRequires&quot;
+                ]
+            ],
+            prereqs    &quot;RuntimeRecommends&quot;,
+            version    1.62
+        }
+
+    * look at the infile sections
+      * ignore 4-7 as they are t/
+      * 0-1 resolves to 0
+
+    so we end up with
+
+    * 0 - RuntimeRecommends ( /lib/Module/Install/Metadata.pm )
+    * 2 - RuntimeRequires ( /lib/Module/Install/Admin/Metadata.pm )
+    * 3 - RuntimeRecommends ( /lib/inc/Module/Install.pm )
+
+    thus YAML::Tiny in this case should be RuntimeRequires
+
+    So added a huristic catch, which barfs a warning and
+    corrects the error by redefining prereqs
+
+    * ignore t/
+    * ignore Perl::PrereqScanner scans if a previous exists for the same file
+    * if no previous re-cast to RuntimeRequires
+</pre>
+</div>
+<br>
+<div style="font-size: small">
+<p></p>
+</div>
+</body>
+</html>
